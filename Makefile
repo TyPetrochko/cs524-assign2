@@ -12,6 +12,8 @@ all: task1
 # "task1" depends on 3 object files. You have been given the last two, but you
 # need to create task1.o.
 task1: task1.o timing.o rwork.o
+task2: task2.o timing.o rwork.o
+task3: task3.o timing.o rwork.o
 
 # The following command is used to create the executable "hello" once you have all 3 dependencies.
 # $(CC) is replaced by the value of CC (mpicc, in this case). $@ is replaced by the target name.

@@ -1,0 +1,30 @@
+/lustre/home/client/fas/cpsc424/thp8
+/lustre/home/client/fas/cpsc424/thp8/as2
+compute-32-12
+compute-32-12
+compute-32-11
+compute-32-11
+Message from process 1: Hello master, from process 1 after working 4 seconds..
+Message from process 2: Hello master, from process 2 after working 12 seconds..
+Message from process 3: Hello master, from process 3 after working 8 seconds..
+Message printed by master: Total elapsed time is 18.000380 seconds.
+
+real	0m19.510s
+user	0m11.148s
+sys	0m0.211s
+Message from process 1: Hello master, from process 1 after working 12 seconds..
+Message from process 2: Hello master, from process 2 after working 8 seconds..
+Message from process 3: Hello master, from process 3 after working 4 seconds..
+Message printed by master: Total elapsed time is 21.000689 seconds.
+
+real	0m22.423s
+user	0m14.115s
+sys	0m0.200s
+Message from process 1: Hello master, from process 1 after working 4 seconds..
+Message from process 2: Hello master, from process 2 after working 8 seconds..
+Message from process 3: Hello master, from process 3 after working 12 seconds..
+Message printed by master: Total elapsed time is 15.000380 seconds.
+
+real	0m16.418s
+user	0m8.137s
+sys	0m0.202s
