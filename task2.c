@@ -72,7 +72,7 @@ main(int argc, char **argv ) {
 
     worktime = rwork(rank,sparm); // Simulate some work
 
-    sprintf(response, "Hello master, from process %d after working %d seconds.", rank, worktime);
+    sprintf(response, "Hello master, from process %d after working %d seconds", rank, worktime);
     
     MPI_Send(response, strlen(response)+1, MPI_CHAR, 0, type, MPI_COMM_WORLD); // tell master we're done
 

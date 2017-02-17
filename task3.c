@@ -60,17 +60,13 @@ main(int argc, char **argv ) {
 
     for (i=1; i<size; i++) {
       // receive one
-      printf("DEBUG: waiting to receive %dth message\n", i);
       MPI_Recv(&(responses[i]), sizeof(struct msg), MPI_CHAR, MPI_ANY_SOURCE, type, MPI_COMM_WORLD, &status);
-      printf("DEBUG: RECEIVED RESPONSE:\n");
-      printf("\tfrom process %d\n", responses[i].proc);
       sleep(3);
       order[responses[i].proc] = i; /* remember which order we were received in */
     }
 
     for (i=1; i<size; i++){
       // print them out now!
-      printf("ORDER: %d\n", order[i]);
       printf("Message from process %d: %s.\n", i, responses[order[i]].text);
     }
     
@@ -90,8 +86,8 @@ main(int argc, char **argv ) {
 
     worktime = rwork(rank,sparm); // Simulate some work
 
-    sprintf(responses[0].text, "Hello master, from process %d after working %d seconds.", rank, worktime);
-    
+    sprintf(responses[0].text, "Hello master, from process %d after working %d seconds", rank, worktime);
+    responses[0].proc = rank;
     MPI_Send(responses, sizeof(struct msg), MPI_CHAR, 0, type, MPI_COMM_WORLD); // tell master we're done
 
     // printf("From process %d: I worked for %d seconds after receiving the following message:\n\t %s\n",
