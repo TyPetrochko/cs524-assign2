@@ -16,7 +16,7 @@ main(int argc, char **argv ) {
   /*
     This is the Hello World program for CPSC424/524.
 
-    Author: Andrew Sherman, Yale University
+    Author: Andrew Sherman, Tyler Petrochko, Yale University
 
     Date: 1/23/2017
 
