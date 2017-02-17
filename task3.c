@@ -6,6 +6,11 @@
 #include "mpi.h"
 #include "timing.h"
 
+struct msg {
+  char text[200];
+  int proc;
+};
+
 main(int argc, char **argv ) {
 
   /*
@@ -19,7 +24,7 @@ main(int argc, char **argv ) {
              had a similar communication pattern, but did not include any simulated work.
   */
 
-  char message[100], response[100];
+  char message[200];
   int i,rank, size, type=99; 
   int worktime, sparm, rwork(int,int);
   double wct0, wct1, total_time, cput;
@@ -30,6 +35,10 @@ main(int argc, char **argv ) {
 
   MPI_Comm_size(MPI_COMM_WORLD,&size); // Get no. of processes
   MPI_Comm_rank(MPI_COMM_WORLD, &rank); // Which process am I?
+
+  // buffers for responses
+  struct msg responses[size]; /* buffers in order they are RECEIVED */
+  int order[size]; /* order in which they are received */
 
   /* If I am the master (rank 0) ... */
   if (rank == 0) {
@@ -50,16 +59,25 @@ main(int argc, char **argv ) {
     } 
 
     for (i=1; i<size; i++) {
-      MPI_Recv(response, 100, MPI_CHAR, i, type, MPI_COMM_WORLD, &status);
+      // receive one
+      printf("DEBUG: waiting to receive %dth message\n", i);
+      MPI_Recv(&(responses[i]), sizeof(struct msg), MPI_CHAR, MPI_ANY_SOURCE, type, MPI_COMM_WORLD, &status);
+      printf("DEBUG: RECEIVED RESPONSE:\n");
+      printf("\tfrom process %d\n", responses[i].proc);
       sleep(3);
-      printf("Message from process %d: %s.\n", i, response);
+      order[responses[i].proc] = i; /* remember which order we were received in */
+    }
+
+    for (i=1; i<size; i++){
+      // print them out now!
+      printf("ORDER: %d\n", order[i]);
+      printf("Message from process %d: %s.\n", i, responses[order[i]].text);
     }
     
     //wct1 = MPI_Wtime(); // Get total elapsed time
     timing(&wct1, &cput); //get the end time
     total_time = wct1 - wct0;
     printf("Message printed by master: Total elapsed time is %f seconds.\n",total_time);
-
   }
 
   /* Otherwise, if I am a worker ... */
@@ -67,14 +85,14 @@ main(int argc, char **argv ) {
  
     MPI_Barrier(MPI_COMM_WORLD); //wait for everyone to be ready before starting
   /* Receive messages from the master */
-    MPI_Recv(message, 100, MPI_CHAR, 0, type, MPI_COMM_WORLD, &status);
+    MPI_Recv(message, 200, MPI_CHAR, 0, type, MPI_COMM_WORLD, &status);
     MPI_Recv(&sparm, 1, MPI_INT, 0, type, MPI_COMM_WORLD, &status);
 
     worktime = rwork(rank,sparm); // Simulate some work
 
-    sprintf(response, "Hello master, from process %d after working %d seconds.", rank, worktime);
+    sprintf(responses[0].text, "Hello master, from process %d after working %d seconds.", rank, worktime);
     
-    MPI_Send(response, strlen(response)+1, MPI_CHAR, 0, type, MPI_COMM_WORLD); // tell master we're done
+    MPI_Send(responses, sizeof(struct msg), MPI_CHAR, 0, type, MPI_COMM_WORLD); // tell master we're done
 
     // printf("From process %d: I worked for %d seconds after receiving the following message:\n\t %s\n",
 	  //  rank,worktime,message);

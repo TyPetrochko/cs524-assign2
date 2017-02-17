@@ -22,6 +22,6 @@ pwd
 cat $PBS_NODEFILE
 
 # Run the program 3 times
-time mpiexec -n 4 task2
-time mpiexec -n 4 task2
+time mpiexec -n 4 task3
+time mpiexec -n 4 task3
 time mpiexec -n 4 task3
